@@ -25,7 +25,7 @@ Add a user for the robot:
 
     sudo adduser otopalikrobot
 
-Set the default shell to zsh:
+The scripts use zsh (not bash), so install it and set it as the default shell:
 
     sudo apt install zsh
     su -l otopalikrobot
@@ -36,7 +36,7 @@ execution bit:
 
     chmod a+x diff-rsync.sh
 
-And schedule it to automatically run:
+And schedule it to automatically run every day at midnight:
 
     crontab -e
     # 0 0 * * * $HOME/diff-rsync.sh > $HOME/diff-rync.$(date +\%Y\%m\%d\%H\%M\%S).log
