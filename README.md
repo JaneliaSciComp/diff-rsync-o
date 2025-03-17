@@ -1,3 +1,14 @@
+A set of scripts to automatically transfer data from rig computers to the
+fileshare and analyze them with the cluster.
+
+An alternative to [transfero](https://github.com/JaneliaSciComp/transfero).
+Uses [WSL2](https://learn.microsoft.com/en-us/windows/wsl/) instead of
+[cygwin](https://www.cygwin.com/) on the rig computer.  Further, the rig
+computer, not the cluster, has the cron job which does the copy.  All in shell
+instead of python.
+
+### Installation ###
+
 In a PowerShell terminal:
 
     wsl --install
@@ -14,7 +25,7 @@ Add a user for the robot:
 
     sudo adduser otopalikrobot
 
-Optionally, set the default shell to something modern:
+Set the default shell to zsh:
 
     sudo apt install zsh
     su -l otopalikrobot
