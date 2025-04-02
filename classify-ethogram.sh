@@ -65,7 +65,8 @@ for wavfile in $(ls ${fileshare_dest_dir_prfs}/${wavdir}/*[^-].WAV) ; do
     if [[ ! -f "${wavfile%.WAV}-predicted-1.0pr.csv" ]] ; then
         echo $wavfile
     
-        cmd="${songexplorer_zip_dir}/bin/songexplorer/src/classify \
+        cmd="echo LSB_JOBID=\$LSB_JOBID; \
+	     ${songexplorer_zip_dir}/bin/songexplorer/src/classify \
     	     --context=$songexplorer_context \
     	     --shiftby=$songexplorer_shiftby \
     	     --time_scale=$songexplorer_time_scale \
