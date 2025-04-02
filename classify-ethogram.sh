@@ -6,7 +6,7 @@ wavdir=$1
 fileshare_dest_dir_prfs=/groups/otopalik/otopaliklab/songtorrent_data
 
 # cluster parameters
-bsub_flags=(-P otopalik -Ne -u arthurb@hhmi.org)
+bsub_flags=(-P otopalik -u arthurb@hhmi.org)
 jobid_regex='Job <\([0-9]*\)> '
 
 # songexplorer parameters
@@ -59,6 +59,7 @@ export PATH=$songexplorer_zip_dir/bin:$songexplorer_zip_dir/bin/songexplorer/src
 chmod -R 755 ${fileshare_dest_dir_prfs}/${wavdir}
 
 # songexplorer v0.8 script to run classify and ethogram on each .wav file in a given folder
+dependency=
 for wavfile in $(ls ${fileshare_dest_dir_prfs}/${wavdir}/*[^-].WAV) ; do
     [[ "$wavfile" =~ .*(LED1|LED2|SYNC|TMPCH|TMPVAL).WAV ]] && continue
 
@@ -100,6 +101,19 @@ for wavfile in $(ls ${fileshare_dest_dir_prfs}/${wavdir}/*[^-].WAV) ; do
         logfile=${wavfile:0:-4}-classify-ethogram.log
         echo $cmd
         echo $cmd >> $logfile
-        echo $cmd | bsub ${bsub_flags[@]} ${=classify_cluster_flags} -o $logfile -e $logfile
+        bsub_stdout=`echo $cmd | bsub ${bsub_flags[@]} -Ne ${=classify_cluster_flags} -o $logfile -e $logfile`
+        jobid=`expr match "$bsub_stdout" "$jobid_regex"`
+        dependency=${dependency}done\($jobid\)'&&'
     fi
 done
+dependency=${dependency%&&}
+
+# check the logs for errors
+cmd="date; \
+     hostname; \
+     grep -E '(CUDA_ERROR|No such)' ${fileshare_dest_dir_prfs}/${wavdir}/*.log ; \
+     nwav=\`ls ${fileshare_dest_dir_prfs}/${wavdir}/*WAV | wc -l\` ; \
+     npred=\`ls ${fileshare_dest_dir_prfs}/${wavdir}/*pred* | wc -l\` ; \
+     [[ "\$nwav" == \$(( 5 + \$npred )) ]] || echo ERROR nwav=\$nwav npred=\$npred ; \
+     date"
+echo $cmd | bsub ${bsub_flags[@]} -w "$dependency" -W 60
