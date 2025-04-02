@@ -36,10 +36,10 @@ execution bit:
 
     chmod a+x diff-rsync.sh
 
-And schedule it to automatically run every day at midnight:
+And schedule it to automatically run every day at 2 AM:
 
     crontab -e
-    # 0 0 * * * $HOME/diff-rsync.sh > $HOME/diff-rync.$(date +\%Y\%m\%d\%H\%M\%S).log
+    # 0 2 * * * $HOME/diff-rsync.sh > $HOME/diff-rsync.$(date +\%Y\%m\%d\%H\%M\%S).log
 
 Enable password-less ssh access to the cluster login node by first generating a
 RSA key pair on the rig computer:
@@ -83,6 +83,16 @@ reboots:
     Go to the "General" tab of the task properties. 
     Check the "Run whether user is logged on or not" option. 
     Set "Run with highest privileges". 
+
+On Windows 11 you might also need to update the WSL configuration by adding
+these lines to /etc/wsl{-distribution}.conf:
+
+    [wsl2]
+    vmIdleTimeout=-1
+
+To debug with a reasonable turn-around time, add this to the crontab, and reboot:
+
+	* * * * * touch $HOME/hi.$(date +\%Y\%m\%d\%H\%M\%S).log
 
 Note that previously I tried to make it reboot-safe with the following, but it
 seemed not to work:
