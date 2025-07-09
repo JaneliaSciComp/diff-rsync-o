@@ -85,7 +85,7 @@ reboots:
     Set "Run with highest privileges". 
 
 On Windows 11 you might also need to update the WSL configuration by adding
-these lines to /etc/wsl{-distribution}.conf:
+these lines to C:\Users\<UserName>\.wslconfig:
 
     [wsl2]
     vmIdleTimeout=-1
