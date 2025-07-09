@@ -90,12 +90,24 @@ these lines to C:\Users\<UserName>\.wslconfig:
     [wsl2]
     vmIdleTimeout=-1
 
-To debug with a reasonable turn-around time, add this to the crontab, and reboot:
+### Monitoring ###
 
-	* * * * * touch $HOME/hi.$(date +\%Y\%m\%d\%H\%M\%S).log
+To check that the scripts are executing as scheduled, add this to the crontab,
+and reboot:
 
-Note that previously I tried to make it reboot-safe with the following, but it
-seemed not to work:
+    * * * * * ssh login1 "echo $(date +\%Y\%m\%d\%H\%M\%S) >> heartbeat.log"
+
+On a different machine, say your Linux workstation, add this to its crontab:
+
+    0 6 * * * /groups/scicompsoft/home/arthurb/projects/otopalik/monitor-heartbeat.sh
+
+You will receive an email in the morning if the Windows box's crontab isn't
+working.
+
+### Notes ###
+
+I previously tried to make it reboot-safe with the following, but it seemed not
+to work:
 
 	Make a file called perpetual-wsl.bat in Windows with the following contents:
 		wsl.exe --exec dbus-launch true
