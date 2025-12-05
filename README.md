@@ -104,6 +104,9 @@ On a different machine, say your Linux workstation, add this to its crontab:
 You will receive an email in the morning if the Windows box's crontab isn't
 working.
 
+You really want to do this because things break for some reason after about two
+months.  A simple reboot of Windows fixes it.
+
 ### Notes ###
 
 I previously tried to make it reboot-safe with the following, but it seemed not
